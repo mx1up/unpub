@@ -52,6 +52,18 @@ class MongoStore extends MetaStore {
   }
 
   @override
+  Future<void> deleteVersion(String name, UnpubVersion version) async {
+    var result = await db.collection(packageCollection).update(
+      {
+        'name': name,
+      },
+      {'\$pull': { 'versions': {'version': version.version}}},
+    );
+
+    print('result: $result');
+  }
+
+  @override
   Future<void> addUploader(String name, String email) async {
     await db
         .collection(packageCollection)

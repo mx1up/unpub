@@ -14,6 +14,8 @@ Router _$AppRouter(App service) {
   router.add(
       'PUT', r'/api/packages/<name>/versions/<version>/<newversion>', service.renameVersion);
   router.add(
+      'DELETE', r'/api/packages/<name>/versions/<version>', service.deleteVersion);
+  router.add(
       'GET', r'/packages/<name>/versions/<version>.tar.gz', service.download);
   router.add('GET', r'/api/packages/versions/new', service.getUploadUrl);
   router.add('POST', r'/api/packages/versions/newUpload', service.upload);

@@ -202,6 +202,34 @@ class App {
     return success ? _successMessage('successfully update version') : _badRequest('update version failed: file rename');
   }
 
+  @Route.delete('/api/packages/<name>/versions/<version>')
+  Future<shelf.Response> deleteVersion(
+      shelf.Request req, String name, String version) async {
+    // Important: + -> %2B, should be decoded here
+    try {
+      version = Uri.decodeComponent(version);
+    } catch (err) {
+      print(err);
+    }
+
+    var package = await metaStore.queryPackage(name);
+    if (package == null) {
+      return shelf.Response.notFound('Package not Found');
+    }
+
+    var packageVersion = package.versions
+        .firstWhere((item) => item.version == version, orElse: () => null);
+    if (packageVersion == null) {
+      return shelf.Response.notFound('Package version not Found');
+    }
+
+    await metaStore.deleteVersion(name, packageVersion);
+    // if (!success) return _badRequest('update version failed: db update');
+
+    await packageStore.deleteVersion(name, version);
+    return _successMessage('successfully deleted version');
+  }
+
   @Route.get('/packages/<name>/versions/<version>.tar.gz')
   Future<shelf.Response> download(
       shelf.Request req, String name, String version) async {

@@ -29,4 +29,10 @@ class FileStore extends PackageStore {
     var newFile = await oldFile.rename(_getTarballFile(name, newVersion).path);
     return newFile.path == _getTarballFile(name, newVersion).path;
   }
+
+  @override
+  Future<void> deleteVersion(String name, String version) async {
+    var file = _getTarballFile(name, version);
+    await file.delete();
+  }
 }
