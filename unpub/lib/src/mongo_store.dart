@@ -37,6 +37,21 @@ class MongoStore extends MetaStore {
   }
 
   @override
+  Future<void> updateVersion(String name, UnpubVersion oldVersion, UnpubVersion newVersion) async {
+    var result = await db.collection(packageCollection).findAndModify(
+      query:       {
+        'name': name,
+        'versions.version': oldVersion.version
+      },
+      update:{'\$set': { 'versions.\$.version': newVersion.version}},
+    );
+
+    print('result: $result');
+    // return result['ok'] == 1;
+    // return result['modifiedCount'] == 1;
+  }
+
+  @override
   Future<void> addUploader(String name, String email) async {
     await db
         .collection(packageCollection)

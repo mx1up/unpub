@@ -22,4 +22,11 @@ class FileStore extends PackageStore {
   Stream<List<int>> download(String package, String version) {
     return _getTarballFile(package, version).openRead();
   }
+
+  @override
+  Future<bool> renameVersion(String name, String oldVersion, String newVersion) async {
+    var oldFile = _getTarballFile(name, oldVersion);
+    var newFile = await oldFile.rename(_getTarballFile(name, newVersion).path);
+    return newFile.path == _getTarballFile(name, newVersion).path;
+  }
 }

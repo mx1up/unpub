@@ -10,4 +10,6 @@ abstract class PackageStore {
   }
 
   Future<void> upload(String name, String version, List<int> content);
+
+  Future<bool> renameVersion(String name, String oldVersion, String newVersion);
 }

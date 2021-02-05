@@ -174,6 +174,34 @@ class App {
     return _okWithJson(_versionToJson(packageVersion, req.requestedUri));
   }
 
+  @Route.put('/api/packages/<name>/versions/<version>/<newversion>')
+  Future<shelf.Response> renameVersion(
+      shelf.Request req, String name, String version, String newVersion) async {
+    // Important: + -> %2B, should be decoded here
+    try {
+      version = Uri.decodeComponent(version);
+    } catch (err) {
+      print(err);
+    }
+
+    var package = await metaStore.queryPackage(name);
+    if (package == null) {
+      return shelf.Response.notFound('Package not Found');
+    }
+
+    var packageVersion = package.versions
+        .firstWhere((item) => item.version == version, orElse: () => null);
+    if (packageVersion == null) {
+      return shelf.Response.notFound('Package version not Found');
+    }
+
+    await metaStore.updateVersion(name, packageVersion, packageVersion.copyWith(version: newVersion));
+    // if (!success) return _badRequest('update version failed: db update');
+
+    var success = await packageStore.renameVersion(name, version, newVersion);
+    return success ? _successMessage('successfully update version') : _badRequest('update version failed: file rename');
+  }
+
   @Route.get('/packages/<name>/versions/<version>.tar.gz')
   Future<shelf.Response> download(
       shelf.Request req, String name, String version) async {

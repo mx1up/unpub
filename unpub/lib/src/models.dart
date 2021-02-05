@@ -30,6 +30,24 @@ class UnpubVersion {
       _$UnpubVersionFromJson(map);
 
   Map<String, dynamic> toJson() => _$UnpubVersionToJson(this);
+
+  UnpubVersion copyWith({
+    String version,
+    Map<String, dynamic> pubspec,
+    String pubspecYaml,
+    String readme,
+    String changelog,
+    String uploader,
+    DateTime createdAt,
+  }) {
+    return UnpubVersion(version,
+        pubspec ?? this.pubspec,
+        pubspecYaml ?? this.pubspecYaml,
+        readme ?? this.readme,
+        changelog ?? this.changelog,
+        uploader ?? this.uploader,
+        createdAt ?? this.createdAt);
+  }
 }
 
 @JsonSerializable()
