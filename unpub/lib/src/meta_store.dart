@@ -9,6 +9,8 @@ abstract class MetaStore {
 
   Future<void> deleteVersion(String name, UnpubVersion version);
 
+  Future<void> deletePackage(String name);
+
   Future<void> addUploader(String name, String email);
 
   Future<void> removeUploader(String name, String email);

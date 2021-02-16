@@ -227,7 +227,15 @@ class App {
     // if (!success) return _badRequest('update version failed: db update');
 
     await packageStore.deleteVersion(name, version);
-    return _successMessage('successfully deleted version');
+
+    package = await metaStore.queryPackage(name);
+    if(package.versions.isEmpty){
+      await metaStore.deletePackage(name);
+      //nothing to do in packageStore, since there are no more tarball files
+      return _successMessage('successfully deleted version, no more versions were present so package has been removed as well');
+    } else {
+      return _successMessage('successfully deleted version');
+    }
   }
 
   @Route.get('/packages/<name>/versions/<version>.tar.gz')
