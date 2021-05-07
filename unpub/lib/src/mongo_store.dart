@@ -65,6 +65,9 @@ class MongoStore extends MetaStore {
 
   @override
   Future<void> deletePackage(String name) async {
+    var package = await queryPackage(name);
+    package.versions.forEach((ver) => deleteVersion(name, ver));
+
     var result = await db.collection(packageCollection)
         .remove({'name' : name});
     print('result: $result');
