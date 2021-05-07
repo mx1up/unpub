@@ -174,7 +174,7 @@ class App {
     return _okWithJson(_versionToJson(packageVersion, req.requestedUri));
   }
 
-  @Route.put('/api/packages/<name>/versions/<version>/<newversion>')
+  @Route.put('/api/packages/<name>/versions/<version>/<newVersion>')
   Future<shelf.Response> renameVersion(
       shelf.Request req, String name, String version, String newVersion) async {
     // Important: + -> %2B, should be decoded here
