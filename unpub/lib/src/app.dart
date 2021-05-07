@@ -238,6 +238,17 @@ class App {
     }
   }
 
+  @Route.delete('/api/packages/<name>')
+  Future<shelf.Response> deletePackage(shelf.Request req, String name) async {
+    var package = await metaStore.queryPackage(name);
+    if (package == null) {
+      return shelf.Response.notFound('Package not Found');
+    }
+
+    await metaStore.deletePackage(name);
+    return _successMessage('successfully deleted package $name');
+  }
+
   @Route.get('/packages/<name>/versions/<version>.tar.gz')
   Future<shelf.Response> download(
       shelf.Request req, String name, String version) async {
